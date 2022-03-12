@@ -5,5 +5,5 @@ dotenv.config();
 export default {
   port: process.env.PORT,
   mongoUrl: process.env.MONGO_URL,
-  jwt_secret: process.env.JWT_SECRET,
+  jwt_secret: process.env.JWT_KEY,
 };

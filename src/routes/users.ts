@@ -1,23 +1,50 @@
 import express, { Request, Response, NextFunction } from "express";
+import { createUser, loginUser } from "../services/authentication";
+import verifyToken from "../middlewares/verifyToken";
+
 const router = express.Router();
 
-router.post("/", (req: Request, res: Response, next: NextFunction) => {
-  try {
-    throw new Error("test test");
-    res.status(200).send({ message: "nice" });
-  } catch (error) {
-    next(error);
+router.post(
+  "/register",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const newUser = await createUser(req.body);
+      res.status(201).send({ message: "User created", data: newUser });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.get("/", (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.status(200).send({ message: "nice" });
-  } catch (error) {
-    res.status(500).send({
-      message: "Unknown Error",
-    });
+router.post(
+  "/login",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await loginUser(req.body);
+      res.status(200).send({ message: "Authenticated successful", data: user });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
+
+// * For verifying access token
+router.get(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // @ts-ignore
+      const userData = req.user;
+
+      res.status(200).send({
+        status: "ok",
+        data: userData,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 export default router;
