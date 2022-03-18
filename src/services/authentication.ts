@@ -8,9 +8,6 @@ import keys from "../config";
 
 export const createUser = async (body: IUsers) => {
   const { email, password } = body;
-  if (!email || !password) {
-    throw new BadRequest("Please fill up both email and password");
-  }
   const hashPassword = await bcrypt.hash(password, 10);
   const createdUser: any = await Users.create({
     email,
@@ -47,9 +44,6 @@ export const createUser = async (body: IUsers) => {
 
 export const loginUser = async (body: IUsers) => {
   const { email, password } = body;
-  if (!email || !password) {
-    throw new BadRequest("Please fill in both email and password");
-  }
   const user: any = await Users.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign(

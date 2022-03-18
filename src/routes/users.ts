@@ -1,11 +1,14 @@
 import express, { Request, Response, NextFunction } from "express";
 import { createUser, loginUser } from "../services/authentication";
 import verifyToken from "../middlewares/verifyToken";
+import dtoAuthMiddleware from "../middlewares/dtos/authentication";
+import { authenticationDto } from "../dtos/authentication";
 
 const router = express.Router();
 
 router.post(
   "/register",
+  dtoAuthMiddleware(authenticationDto),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const newUser = await createUser(req.body);
@@ -18,6 +21,7 @@ router.post(
 
 router.post(
   "/login",
+  dtoAuthMiddleware(authenticationDto),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await loginUser(req.body);

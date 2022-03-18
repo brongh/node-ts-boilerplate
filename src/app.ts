@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import cors from "cors";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import { initializeMongo } from "./config/db";
 import { errorHandler } from "./middlewares/errorHandler";
 
